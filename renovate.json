@@ -4,60 +4,6 @@
   "regexManagers": [
     {
       "fileMatch": ["^versions\\.yaml$"],
-      "matchStrings": ["ocp-4.12-rc:\\s*\"(?<currentValue>.*?)\""],
-      "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "openshift-release-dev/ocp-release",
-      "depNameTemplate": "ocp-12-rc",
-      "versioningTemplate": "regex:^4\\.12\\.(?<patch>\\d+)-rc\\.(?<build>\\d+)-x86_64$"
-    },
-    {
-      "fileMatch": ["^versions\\.yaml$"],
-      "matchStrings": ["ocp-4.13-rc:\\s*\"(?<currentValue>.*?)\""],
-      "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "openshift-release-dev/ocp-release",
-      "depNameTemplate": "ocp-13-rc",
-      "versioningTemplate": "regex:^4\\.13\\.(?<patch>\\d+)-rc\\.(?<build>\\d+)-x86_64$"
-    },
-    {
-      "fileMatch": ["^versions\\.yaml$"],
-      "matchStrings": ["ocp-4.14-rc:\\s*\"(?<currentValue>.*?)\""],
-      "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "openshift-release-dev/ocp-release",
-      "depNameTemplate": "ocp-14-rc",
-      "versioningTemplate": "regex:^4\\.14\\.(?<patch>\\d+)-rc\\.(?<build>\\d+)-x86_64$"
-    },
-    {
-      "fileMatch": ["^versions\\.yaml$"],
-      "matchStrings": ["ocp-4.15-rc:\\s*\"(?<currentValue>.*?)\""],
-      "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "openshift-release-dev/ocp-release",
-      "depNameTemplate": "ocp-15-rc",
-      "versioningTemplate": "regex:^4\\.15\\.(?<patch>\\d+)-rc\\.(?<build>\\d+)-x86_64$"
-    },
-    {
-      "fileMatch": ["^versions\\.yaml$"],
-      "matchStrings": ["ocp-4.16-rc:\\s*\"(?<currentValue>.*?)\""],
-      "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "openshift-release-dev/ocp-release",
-      "depNameTemplate": "ocp-16-rc",
-      "versioningTemplate": "regex:^4\\.16\\.(?<patch>\\d+)-rc\\.(?<build>\\d+)-x86_64$"
-    },
-    {
-      "fileMatch": ["^versions\\.yaml$"],
-      "matchStrings": ["ocp-4.17-rc:\\s*\"(?<currentValue>.*?)\""],
-      "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "openshift-release-dev/ocp-release",
-      "depNameTemplate": "ocp-17-rc",
-      "versioningTemplate": "regex:^4\\.17\\.(?<patch>\\d+)-rc\\.(?<build>\\d+)-x86_64$"
-    },
-    {
-      "fileMatch": ["^versions\\.yaml$"],
       "matchStrings": ["ocp-4.12:\\s*\"(?<currentValue>.*?)\""],
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://quay.io",
@@ -85,15 +31,6 @@
     },
     {
       "fileMatch": ["^versions\\.yaml$"],
-      "matchStrings": ["ocp-4.17:\\s*\"(?<currentValue>.*?)\""],
-      "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "openshift-release-dev/ocp-release",
-      "depNameTemplate": "ocp-17",
-      "versioningTemplate": "regex:^4\\.17\\.(?<patch>\\d+)-x86_64$"
-    },
-    {
-      "fileMatch": ["^versions\\.yaml$"],
       "matchStrings": ["ocp-4.15:\\s*\"(?<currentValue>.*?)\""],
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://quay.io",
@@ -112,6 +49,15 @@
     },
     {
       "fileMatch": ["^versions\\.yaml$"],
+      "matchStrings": ["ocp-4.17:\\s*\"(?<currentValue>.*?)\""],
+      "datasourceTemplate": "docker",
+      "registryUrlTemplate": "https://quay.io",
+      "packageNameTemplate": "openshift-release-dev/ocp-release",
+      "depNameTemplate": "ocp-17",
+      "versioningTemplate": "regex:^4\\.17\\.(?<patch>\\d+)-x86_64$"
+    },
+    {
+      "fileMatch": ["^versions\\.yaml$"],
       "matchStrings": ["gpu_operator_version:\\s*\"(?<currentValue>.*?)\""],
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://nvcr.io",
@@ -127,48 +73,6 @@
       "separateMinorPatch": true,
       "separateMajorMinor": true,
       "prBodyNotes": ["/test nvidia"]
-    },
-    {
-      "matchDepNames": ["ocp-12-rc"],
-      "separateMinorPatch": true,
-      "separateMajorMinor": true,
-      "versioning": "regex:^4\\.12\\.(?<patch>\\d+)-rc\\.(?<build>\\d+)-x86_64$",
-      "prBodyNotes": ["test rc12"]
-    },
-    {
-      "matchDepNames": ["ocp-13-rc"],
-      "separateMinorPatch": true,
-      "separateMajorMinor": true,
-      "versioning": "regex:^4\\.13\\.(?<patch>\\d+)-rc\\.(?<build>\\d+)-x86_64$",
-      "prBodyNotes": ["test rc13"]
-    },
-    {
-      "matchDepNames": ["ocp-17-rc"],
-      "separateMinorPatch": true,
-      "separateMajorMinor": true,
-      "versioning": "regex:^4\\.17\\.(?<patch>\\d+)-rc\\.(?<build>\\d+)-x86_64$",
-      "prBodyNotes": ["test rc17"]
-    },
-    {
-      "matchDepNames": ["ocp-14-rc"],
-      "separateMinorPatch": true,
-      "separateMajorMinor": true,
-      "versioning": "regex:^4\\.14\\.(?<patch>\\d+)-rc\\.(?<build>\\d+)-x86_64$",
-      "prBodyNotes": ["test rc14"]
-    },
-    {
-      "matchDepNames": ["ocp-15-rc"],
-      "separateMinorPatch": true,
-      "separateMajorMinor": true,
-      "versioning": "regex:^4\\.15\\.(?<patch>\\d+)-rc\\.(?<build>\\d+)-x86_64$",
-      "prBodyNotes": ["test rc15"]
-    },
-    {
-      "matchDepNames": ["ocp-16-rc"],
-      "separateMinorPatch": true,
-      "separateMajorMinor": true,
-      "versioning": "regex:^4\\.16\\.(?<patch>\\d+)-rc\\.(?<build>\\d+)-x86_64$",
-      "prBodyNotes": ["test rc16"]
     },
     {
       "matchDepNames": ["ocp-12"],
