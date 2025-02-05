@@ -49,6 +49,15 @@
     },
     {
       "fileMatch": ["^versions\\.yaml$"],
+      "matchStrings": ["ocp-4.17-rc:\\s*\"(?<currentValue>.*?)\""],
+      "datasourceTemplate": "docker",
+      "registryUrlTemplate": "https://quay.io",
+      "packageNameTemplate": "openshift-release-dev/ocp-release",
+      "depNameTemplate": "ocp-17-rc",
+      "versioningTemplate": "regex:^4\\.17\\.(?<patch>\\d+)-rc\\.(?<build>\\d+)-x86_64$"
+    },
+    {
+      "fileMatch": ["^versions\\.yaml$"],
       "matchStrings": ["ocp-4.12:\\s*\"(?<currentValue>.*?)\""],
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://quay.io",
@@ -76,6 +85,15 @@
     },
     {
       "fileMatch": ["^versions\\.yaml$"],
+      "matchStrings": ["ocp-4.17:\\s*\"(?<currentValue>.*?)\""],
+      "datasourceTemplate": "docker",
+      "registryUrlTemplate": "https://quay.io",
+      "packageNameTemplate": "openshift-release-dev/ocp-release",
+      "depNameTemplate": "ocp-17",
+      "versioningTemplate": "regex:^4\\.17\\.(?<patch>\\d+)-x86_64$"
+    },
+    {
+      "fileMatch": ["^versions\\.yaml$"],
       "matchStrings": ["ocp-4.15:\\s*\"(?<currentValue>.*?)\""],
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://quay.io",
@@ -91,15 +109,6 @@
       "packageNameTemplate": "openshift-release-dev/ocp-release",
       "depNameTemplate": "ocp-16",
       "versioningTemplate": "regex:^4\\.16\\.(?<patch>\\d+)-x86_64$"
-    },
-    {
-      "fileMatch": ["^versions\\.yaml$"],
-      "matchStrings": ["ocp-4.17:\\s*\"(?<currentValue>.*?)\""],
-      "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "openshift-release-dev/ocp-release",
-      "depNameTemplate": "ocp-17",
-      "versioningTemplate": "regex:^4\\.17\\.(?<patch>\\d+)-x86_64$"
     },
     {
       "fileMatch": ["^versions\\.yaml$"],
@@ -132,6 +141,13 @@
       "separateMajorMinor": true,
       "versioning": "regex:^4\\.13\\.(?<patch>\\d+)-rc\\.(?<build>\\d+)-x86_64$",
       "prBodyNotes": ["test rc13"]
+    },
+    {
+      "matchDepNames": ["ocp-17-rc"],
+      "separateMinorPatch": true,
+      "separateMajorMinor": true,
+      "versioning": "regex:^4\\.17\\.(?<patch>\\d+)-rc\\.(?<build>\\d+)-x86_64$",
+      "prBodyNotes": ["test rc17"]
     },
     {
       "matchDepNames": ["ocp-14-rc"],
