@@ -3,60 +3,19 @@
   "enabledManagers": ["regex"],
   "regexManagers": [
     {
+      "description": "OpenShift version management (4.12-4.17)",
       "fileMatch": ["^versions\\.yaml$"],
-      "matchStrings": ["ocp-4.12:\\s*\"(?<currentValue>.*?)\""],
+      "matchStrings": [
+        "ocp-4.(?<minor>12|13|14|15|16|17):\\s*\"(?<currentValue>.*?)\""
+      ],
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://quay.io",
       "packageNameTemplate": "openshift-release-dev/ocp-release",
-      "depNameTemplate": "ocp-12",
-      "versioningTemplate": "regex:^4\\.12\\.(?<patch>\\d+)-x86_64$"
+      "depNameTemplate": "ocp-{{{minor}}}",
+      "versioningTemplate": "regex:^4\\.{{{minor}}}\\.(?<patch>\\d+)-x86_64$"
     },
     {
-      "fileMatch": ["^versions\\.yaml$"],
-      "matchStrings": ["ocp-4.13:\\s*\"(?<currentValue>.*?)\""],
-      "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "openshift-release-dev/ocp-release",
-      "depNameTemplate": "ocp-13",
-      "versioningTemplate": "regex:^4\\.13\\.(?<patch>\\d+)-x86_64$"
-    },
-    {
-      "fileMatch": ["^versions\\.yaml$"],
-      "matchStrings": ["ocp-4.14:\\s*\"(?<currentValue>.*?)\""],
-      "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "openshift-release-dev/ocp-release",
-      "depNameTemplate": "ocp-14",
-      "versioningTemplate": "regex:^4\\.14\\.(?<patch>\\d+)-x86_64$"
-    },
-    {
-      "fileMatch": ["^versions\\.yaml$"],
-      "matchStrings": ["ocp-4.15:\\s*\"(?<currentValue>.*?)\""],
-      "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "openshift-release-dev/ocp-release",
-      "depNameTemplate": "ocp-15",
-      "versioningTemplate": "regex:^4\\.15\\.(?<patch>\\d+)-x86_64$"
-    },
-    {
-      "fileMatch": ["^versions\\.yaml$"],
-      "matchStrings": ["ocp-4.16:\\s*\"(?<currentValue>.*?)\""],
-      "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "openshift-release-dev/ocp-release",
-      "depNameTemplate": "ocp-16",
-      "versioningTemplate": "regex:^4\\.16\\.(?<patch>\\d+)-x86_64$"
-    },
-    {
-      "fileMatch": ["^versions\\.yaml$"],
-      "matchStrings": ["ocp-4.17:\\s*\"(?<currentValue>.*?)\""],
-      "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "openshift-release-dev/ocp-release",
-      "depNameTemplate": "ocp-17",
-      "versioningTemplate": "regex:^4\\.17\\.(?<patch>\\d+)-x86_64$"
-    },
-    {
+      "description": "NVIDIA GPU Operator",
       "fileMatch": ["^versions\\.yaml$"],
       "matchStrings": ["gpu_operator_version:\\s*\"(?<currentValue>.*?)\""],
       "datasourceTemplate": "docker",
@@ -69,47 +28,21 @@
 
   "packageRules": [
     {
+      "description": "Default rules for all OCP versions",
+      "matchDepPatterns": ["^ocp-\\d+$"],
+      "separateMinorPatch": true,
+      "separateMajorMinor": true,
+      "prBodyNotes": ["test {{{depName}}}"]
+    },
+    {
+      "description": "NVIDIA GPU Operator rules",
       "matchDepNames": ["nvidia-gpu-operator"],
       "separateMinorPatch": true,
       "separateMajorMinor": true,
       "prBodyNotes": ["/test nvidia"]
-    },
-    {
-      "matchDepNames": ["ocp-12"],
-      "separateMinorPatch": true,
-      "separateMajorMinor": true,
-      "prBodyNotes": ["test 12"]
-    },
-    {
-      "matchDepNames": ["ocp-13"],
-      "separateMinorPatch": true,
-      "separateMajorMinor": true,
-      "prBodyNotes": ["test 13"]
-    },{
-      "matchDepNames": ["ocp-14"],
-      "separateMinorPatch": true,
-      "separateMajorMinor": true,
-      "prBodyNotes": ["test 14"]
-    },
-    {
-      "matchDepNames": ["ocp-15"],
-      "separateMinorPatch": true,
-      "separateMajorMinor": true,
-      "prBodyNotes": ["test 15"]
-    },
-    {
-      "matchDepNames": ["ocp-16"],
-      "separateMinorPatch": true,
-      "separateMajorMinor": true,
-      "prBodyNotes": ["test 16"]
-    },
-    {
-      "matchDepNames": ["ocp-17"],
-      "separateMinorPatch": true,
-      "separateMajorMinor": true,
-      "prBodyNotes": ["test 17"]
     }
   ],
+
   "schedule": ["at any time"],
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0
