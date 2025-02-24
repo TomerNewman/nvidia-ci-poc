@@ -21,8 +21,8 @@
         "gpu-24.(?<minor>6|9|12):\\s*\"(?<currentValue>.*?)\""
       ],
       "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "rh-ee-tnewman/gpu-test",
+      "registryUrlTemplate": "https://nvcr.io",
+      "packageNameTemplate": "nvidia/gpu-operator",
       "depNameTemplate": "GPU operator minor version - {{{minor}}}",
       "versioningTemplate": "regex:^v(?<major>\\d+)\\.{{{minor}}}\\.(?<patch>\\d+)$"
     },
@@ -34,7 +34,7 @@
       ],
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "rh-ee-tnewman/myrepo",
+      "packageNameTemplate": "openshift-release-dev/ocp-release",
       "depNameTemplate": "ocp-{{minor}}",
       "versioningTemplate": "regex:^(?<major>\\d+)\\.{{{minor}}}\\.(?<patch>\\d+)-x86_64$"
     },
@@ -46,7 +46,7 @@
       ],
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "rh-ee-tnewman/myrepo",
+      "packageNameTemplate": "openshift-release-dev/ocp-release",
       "depNameTemplate": "ocp-rc-{{minor}}",
       "versioningTemplate": "regex:^(?<major>\\d+)\\.{{{minor}}}\\.0-rc\\.(?<patch>\\d+)-x86_64$"
     }
@@ -63,20 +63,20 @@
     },
     {
       "description": "Set PR notes for NVIDIA GPU Operator version updates",
-      "matchDepPatterns": ["^GPU-Operator-Version-\\d+$"],
+      "matchDepPatterns": ["^GPU operator minor version - \\d+$"],
       "prBodyNotes": [
         "/test 4.12-nvidia-gpu-operator-e2e-latest 4.14-nvidia-gpu-operator-e2e-latest 4.15-nvidia-gpu-operator-e2e-latest 4.16-nvidia-gpu-operator-e2e-latest 4.17-nvidia-gpu-operator-e2e-latest"
       ]
     },
     {
       "description": "Set PR notes for stable OpenShift version updates",
-      "matchPackageNames": ["rh-ee-tnewman/myrepo"],
+      "matchPackageNames": ["openshift-release-dev/ocp-release"],
       "matchDepPatterns": ["^ocp-(?<minor>12|13|14|15|16|17|18|19|20|21)$"],
       "prBodyNotes": ["/test 4.{{replace 'ocp-' '' depName}}-nvidia-gpu-operator-e2e-latest"]
     },
     {
       "description": "Set PR notes for OpenShift RC updates",
-      "matchPackageNames": ["rh-ee-tnewman/myrepo"],
+      "matchPackageNames": ["openshift-release-dev/ocp-release"],
       "matchDepPatterns": ["ocp-rc-(?<minor>18|19|20|21)"],
       "prBodyNotes": ["/test 4.{{replace 'ocp-rc-' '' depName}}-nvidia-gpu-operator-e2e-latest"]
     }
