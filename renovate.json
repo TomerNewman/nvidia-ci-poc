@@ -34,7 +34,7 @@
       ],
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "openshift-release-dev/ocp-release",
+      "packageNameTemplate": "rh-ee-tnewman/myrepo",
       "depNameTemplate": "ocp-{{minor}}",
       "versioningTemplate": "regex:^(?<major>\\d+)\\.{{{minor}}}\\.(?<patch>\\d+)-x86_64$"
     },
@@ -46,7 +46,7 @@
       ],
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://quay.io",
-      "packageNameTemplate": "openshift-release-dev/ocp-release",
+      "packageNameTemplate": "rh-ee-tnewman/myrepo",
       "depNameTemplate": "ocp-rc-{{minor}}",
       "versioningTemplate": "regex:^(?<major>\\d+)\\.{{{minor}}}\\.0-rc\\.(?<patch>\\d+)-x86_64$"
     }
