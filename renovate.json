@@ -65,7 +65,7 @@
       "description": "Set PR notes for NVIDIA GPU Operator version updates",
       "matchDepPatterns": ["^GPU operator minor version - (?<major>\\d+)\\.(?<minor>\\d+)$"],
       "prBodyNotes": [
-        "/test 4.12-nvidia-gpu-operator-e2e-{{{major}}}.{{{minor}}} 4.14-nvidia-gpu-operator-e2e-{{{major}}}.{{{minor}}} 4.15-nvidia-gpu-operator-e2e-{{{major}}}.{{{minor}}} 4.16-nvidia-gpu-operator-e2e-{{{major}}}.{{{minor}}} 4.17-nvidia-gpu-operator-e2e-{{{major}}}.{{{minor}}}"
+        "/test 4.12-nvidia-gpu-operator-e2e-{{replace 'GPU operator minor version - ' '' depName}} 4.14-nvidia-gpu-operator-e2e-{{replace 'GPU operator minor version - ' '' depName}} 4.15-nvidia-gpu-operator-e2e-{{replace 'GPU operator minor version - ' '' depName}} 4.16-nvidia-gpu-operator-e2e-{{replace 'GPU operator minor version - ' '' depName}} 4.17-nvidia-gpu-operator-e2e-{{replace 'GPU operator minor version - ' '' depName}}"
       ]
     },
     {
