@@ -21,8 +21,8 @@
         "gpu-24.(?<minor>6|9|12):\\s*\"(?<currentValue>.*?)\""
       ],
       "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://nvcr.io",
-      "packageNameTemplate": "nvidia/gpu-operator",
+      "registryUrlTemplate": "https://quay.io",
+      "packageNameTemplate": "rh-ee-tnewman/gpu-test",
       "depNameTemplate": "GPU operator minor version - {{{minor}}}",
       "versioningTemplate": "regex:^v(?<major>\\d+)\\.{{{minor}}}\\.(?<patch>\\d+)$"
     },
@@ -70,13 +70,13 @@
     },
     {
       "description": "Set PR notes for stable OpenShift version updates",
-      "matchPackageNames": ["openshift-release-dev/ocp-release"],
+      "matchPackageNames": ["rh-ee-tnewman/myrepo"],
       "matchDepPatterns": ["^ocp-(?<minor>12|13|14|15|16|17|18|19|20|21)$"],
       "prBodyNotes": ["/test 4.{{replace 'ocp-' '' depName}}-nvidia-gpu-operator-e2e-latest"]
     },
     {
       "description": "Set PR notes for OpenShift RC updates",
-      "matchPackageNames": ["openshift-release-dev/ocp-release"],
+      "matchPackageNames": ["rh-ee-tnewman/myrepo"],
       "matchDepPatterns": ["ocp-rc-(?<minor>18|19|20|21)"],
       "prBodyNotes": ["/test 4.{{replace 'ocp-rc-' '' depName}}-nvidia-gpu-operator-e2e-latest"]
     }
