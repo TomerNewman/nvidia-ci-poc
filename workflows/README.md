@@ -3,7 +3,7 @@
 ## TODO
 
 * Implement OpenShift versions
-* Implement GPU operator releases
+* Improve GPU operator releases - use `curl` or commit the Python libraries to avoid installing them every time
 * Calculate the right tests to run for PR messages
 
 ## Useful links
@@ -26,7 +26,8 @@ curl -SsL -X GET "https://quay.io/v2/openshift-release-dev/ocp-release/tags/list
 
 ### NVIDIA GPU operator (releases)
 
-Public, but requires authentication (haven't figured out yet how to do it)
+Public, but requires authentication (haven't figured out yet how to do it).
+Maybe the Python SDK can give some clues https://docs.ngc.nvidia.com/sdk/index.html (or used directly)
 
 ```console
 curl -SsL -X GET https://nvcr.io/v2/nvidia/gpu-operator/tags/list -H 'Content-Type: application/json'
