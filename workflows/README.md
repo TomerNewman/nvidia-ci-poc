@@ -27,7 +27,14 @@ curl -SsL -X GET "https://quay.io/v2/openshift-release-dev/ocp-release/tags/list
 ### NVIDIA GPU operator (releases)
 
 Public, but requires authentication (haven't figured out yet how to do it).
-Maybe the Python SDK can give some clues https://docs.ngc.nvidia.com/sdk/index.html (or used directly)
+Maybe the Python SDK can give some clues https://docs.ngc.nvidia.com/sdk/index.html (or used directly).
+
+The authentication should work along the lines of:
+
+```console
+export AUTH_TOKEN=$(echo '$ouathtoken:<ngc-api-key>' | base64 -w 0)
+curl -vSsL 'https://authn.nvidia.com/token?service=ngc&group=ngc:kse5libxgpiz/no-team' -H "Authorization: Basic $AUTH_TOKEN" -H "Content-Type: application/json"
+```
 
 ```console
 curl -SsL -X GET https://nvcr.io/v2/nvidia/gpu-operator/tags/list -H 'Content-Type: application/json'
