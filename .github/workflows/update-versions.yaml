@@ -24,7 +24,7 @@ jobs:
       - name: Update OCP Version
         run: |
           pip install -r workflows/requirements.txt
-          AUTH_TOKEN=$(echo ${{ secrets.GITHUB_TOKEN }} | base64)
+          export AUTH_TOKEN=$(echo ${{ secrets.GITHUB_TOKEN }} | base64)
           echo '{}' > file.json
           python workflows/update_ocp_version.py workflows/versions.json
           python workflows/update_gpu_bundle.py workflows/versions.json
