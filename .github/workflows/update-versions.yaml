@@ -31,6 +31,9 @@ jobs:
           python workflows/update_gpu_operator.py workflows/versions.json
           python workflows/update_gpu_bundle.py workflows/versions.json
           python workflows/trigger_tests.py
+          echo 'TEST_TRIGGERS<<EOF' >> $GITHUB_OUTPUT
+          cat ${TEST_TO_TRIGGER_FILE_PATH} >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
         env:
           AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           QUAY_URL_API: "https://quay.io/api/v1/repository/openshift-release-dev/ocp-release/tag/"
@@ -44,9 +47,11 @@ jobs:
           commit-message: Update versions
           body: |
             :warning: Before approving the PR, run
-
-            $(cat ${TEST_TO_TRIGGER_FILE_PATH})
-  
+            
+             ```
+            ${{ steps.read_tests.outputs.TEST_TRIGGERS }}
+            ```
+            
             Updates version of the OCP version
           delete-branch: true
           assignees: empovit,TomerNewman
