@@ -25,7 +25,7 @@ jobs:
         run: |
           pip install -r workflows/requirements.txt
           export AUTH_TOKEN=$(echo ${{ secrets.GITHUB_TOKEN }} | base64)
-          echo '{}' > file.json
+          echo '{}' > ${NEW_VERSION_FILE_PATH}
           python workflows/update_ocp_version.py workflows/versions.json
           python workflows/update_gpu_bundle.py workflows/versions.json
         env:
