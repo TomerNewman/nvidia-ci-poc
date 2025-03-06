@@ -1,6 +1,8 @@
 import json
 import logging
 
+from settings import settings
+
 logger = logging.getLogger('versions')
 logger.setLevel(logging.DEBUG)
 
@@ -21,22 +23,17 @@ def update_key(versions_file, version_key, version_value):
             return
 
         logger.info(f'New version detected: {version_value} (was {old_version})')
+
         data[version_key] = version_value
         json_f.seek(0)  # rewind
         json.dump(data, json_f, indent=4)
         json_f.truncate()
 
-def update_keys(versions_file, group_key, values):
+    with open(settings.new_version_file_path, "r+") as json_f:
 
-    with open(versions_file, "r+") as json_f:
         data = json.load(json_f)
-        old_versions = data.get(group_key)
-        if old_versions == values:
-            logger.info('No changes detected, exit')
-            return
+        data[version_key] = version_value
 
-        logger.info(f'Changes detected: {values} (was {old_versions})')
-        data[group_key] = values
         json_f.seek(0)  # rewind
         json.dump(data, json_f, indent=4)
         json_f.truncate()

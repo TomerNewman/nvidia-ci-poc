@@ -31,19 +31,16 @@ def fetch_ocp_versions(version: str):
     return versions
 
 def get_latest_ocp_patch_versions():
-    latest_versions = []
+    latest_versions = {}
 
     for version in settings.tracked_versions:
         versions = fetch_ocp_versions(version)
         if versions:
             latest_version = max(versions, key=semver.VersionInfo.parse)
-            latest_versions.append(latest_version)
+            latest_versions[version] = latest_version
 
     return latest_versions
 
 if __name__ == '__main__':
     versions = get_latest_ocp_patch_versions()
-    for latest_version in versions:
-        major_minor_key = latest_version.rsplit(".", 1)[0]
-        update_key(sys.argv[1], major_minor_key, latest_version)
-        logger.info(f"updated {sys.argv[1]}: {major_minor_key} -> {latest_version}")
+    update_key(sys.argv[1], "ocp", versions)

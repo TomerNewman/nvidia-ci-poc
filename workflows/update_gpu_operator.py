@@ -37,4 +37,4 @@ def get_latest_versions_as_suffix(versions):
 
 if __name__ == "__main__":
     versions = get_operator_versions()
-    utils.update_keys(sys.argv[1], 'gpu-operator', versions)
+    utils.update_key(sys.argv[1], 'gpu-operator', versions)
