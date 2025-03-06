@@ -1,27 +1,40 @@
 #!/usr/bin/env python
 
-from ngcsdk import Client
-from registry.api import image
-import os
+import requests
 import re
 import utils
 import sys
 
-if __name__ == "__main__":
-    # https://docs.ngc.nvidia.com/sdk/index.html
-    c = Client()
-    api_key = os.getenv('API_KEY') # https://org.ngc.nvidia.com/setup/api-keys
-    c.configure(api_key=api_key, org_name='kse5libxgpiz', team_name='no-team', ace_name='no-ace')
-    i = image.ImageAPI(c)
+def get_operator_versions():
+    utils.logger.info('Calling NVCR authentication API')
+    auth_req = requests.get('https://nvcr.io/proxy_auth?scope=repository:nvidia/gpu-operator:pull', allow_redirects=True,
+                                headers={'Content-Type': 'application/json'})
+    auth_req.raise_for_status()
+    token = auth_req.json()['token']
 
+    utils.logger.info('Listing tags of the operator image')
+    req = requests.get('https://nvcr.io/v2/nvidia/gpu-operator/tags/list', headers={
+        'Content-Type': 'application/json', 'Authorization': f'Bearer {token}'})
+    req.raise_for_status()
+
+    tags = req.json()['tags']
     prog = re.compile(r'^v(2\d\.\d+)\.\d+$')
     versions = {}
-    for i in i.list_images('nvidia/gpu-operator'):
-        match = prog.match(i.tag)
+    for t in tags:
+        match = prog.match(t)
         if match:
             minor = match.group(1)
             existing = versions.get(minor)
-            if not existing or existing < i.tag:
-                versions[minor] = i.tag
+            if not existing or existing < t:
+                versions[minor] = t
+    return versions
 
+def version2suffix(v):
+    return f'{v.replace(".", "-")}-x'
+
+def get_latest_versions_as_suffix(versions):
+    return [version2suffix(v) for v in sorted(versions)[-2:]]
+
+if __name__ == "__main__":
+    versions = get_operator_versions()
     utils.update_keys(sys.argv[1], 'gpu-operator', versions)
