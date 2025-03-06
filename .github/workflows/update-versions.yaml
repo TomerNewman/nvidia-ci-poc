@@ -25,6 +25,7 @@ jobs:
         run: |
           pip install -r workflows/requirements.txt
           export AUTH_TOKEN=$(echo ${{ secrets.GITHUB_TOKEN }} | base64)
+          mkdir -p $(dirname ${NEW_VERSION_FILE_PATH})
           echo '{}' > ${NEW_VERSION_FILE_PATH}
           python workflows/update_ocp_version.py workflows/versions.json
           python workflows/update_gpu_bundle.py workflows/versions.json
@@ -33,7 +34,7 @@ jobs:
           QUAY_URL_API: "https://quay.io/api/v1/repository/openshift-release-dev/ocp-release/tag/"
           TRACKED_VERSIONS: '["4.12", "4.14", "4.15", "4.16", "4.17", "4.18", "4.19", "4.20"]'
           TEST_TO_TRIGGER_FILE_PATH: "workflows/generatble-files/tests_to_trigger.txt"
-          NEW_VERSION_FILE_PATH: "workflows/generatble-files/file.json"
+          NEW_VERSION_FILE_PATH: "workflows/generatble-files/new_versions.json"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
