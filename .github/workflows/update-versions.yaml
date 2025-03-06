@@ -31,15 +31,20 @@ jobs:
           python workflows/update_gpu_operator.py workflows/versions.json
           python workflows/update_gpu_bundle.py workflows/versions.json
           python workflows/trigger_tests.py
-          echo 'TEST_TRIGGERS<<EOF' >> $GITHUB_OUTPUT
-          cat ${TEST_TO_TRIGGER_FILE_PATH} >> $GITHUB_OUTPUT
-          echo 'EOF' >> $GITHUB_OUTPUT
+
         env:
           AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           QUAY_URL_API: "https://quay.io/api/v1/repository/openshift-release-dev/ocp-release/tag/"
           TRACKED_VERSIONS: '["4.12", "4.14", "4.15", "4.16", "4.17", "4.18", "4.19", "4.20"]'
           NEW_VERSION_FILE_PATH: "workflows/generatble-files/new_versions.json"
           TEST_TO_TRIGGER_FILE_PATH: "workflows/generatble-files/tests_to_trigger.txt"
+      - name: Read Test Trigger File
+        id: read_tests
+        run: |
+          echo 'TEST_TRIGGERS<<EOF' >> $GITHUB_OUTPUT
+          cat ${TEST_TO_TRIGGER_FILE_PATH} >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
