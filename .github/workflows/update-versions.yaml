@@ -1,35 +1,50 @@
+name: Check for new versions
+on:
+  # schedule:
+  #   - cron: '30 10 * * *'
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to check out'
+        default: 'main'
+        required: false
+        type: string
 jobs:
   ocp-version:
     runs-on: ubuntu-latest
-    env:
-      TEST_TO_TRIGGER_FILE_PATH: "workflows/generatble-files/tests_to_trigger.txt"
-      NEW_VERSION_FILE_PATH: "workflows/generatble-files/file.json"
     steps:
       - name: Check out the Repo
         uses: actions/checkout@v2
         with:
           ref: ${{ inputs.branch }}
-
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.13
-
       - name: Update OCP Version
         run: |
           pip install -r workflows/requirements.txt
-          mkdir -p $(dirname ${NEW_VERSION_FILE_PATH})  # Ensure directory exists
+          export AUTH_TOKEN=$(echo ${{ secrets.GITHUB_TOKEN }} | base64)
+          mkdir -p $(dirname ${NEW_VERSION_FILE_PATH})
           echo '{}' > ${NEW_VERSION_FILE_PATH}
           python workflows/update_ocp_version.py workflows/versions.json
+          python workflows/update_gpu_operator.py workflows/versions.json
           python workflows/update_gpu_bundle.py workflows/versions.json
+          python workflows/trigger_tests.py
 
+        env:
+          AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          QUAY_URL_API: "https://quay.io/api/v1/repository/openshift-release-dev/ocp-release/tag/"
+          TRACKED_VERSIONS: '["4.12", "4.14", "4.15", "4.16", "4.17", "4.18", "4.19", "4.20"]'
+          NEW_VERSION_FILE_PATH: "workflows/generatble-files/new_versions.json"
+          TEST_TO_TRIGGER_FILE_PATH: "workflows/generatble-files/tests_to_trigger.txt"
       - name: Read Test Trigger File
         id: read_tests
         run: |
           {
-            echo 'TEST_TRIGGERS<<EOF'
-            cat ${TEST_TO_TRIGGER_FILE_PATH}
-            echo 'EOF'
+           echo 'TEST_TRIGGERS<<EOF'
+           cat ${TEST_TO_TRIGGER_FILE_PATH}
+           echo 'EOF'
           } >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
@@ -38,12 +53,12 @@ jobs:
           title: "[Automatic] Update versions"
           commit-message: Update versions
           body: |
-            :warning: Before approving the PR, the following tests should be run:
-
-            ```
+            :warning: Before approving the PR, run
+            
+             ```
             ${{ steps.read_tests.outputs.TEST_TRIGGERS }}
             ```
-
+            
             Updates version of the OCP version
           delete-branch: true
           assignees: empovit,TomerNewman
