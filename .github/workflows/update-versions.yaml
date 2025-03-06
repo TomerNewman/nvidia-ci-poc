@@ -11,6 +11,8 @@ on:
         type: string
 jobs:
   ocp-version:
+    env:
+      TEST_TO_TRIGGER_FILE_PATH: "workflows/generatble-files/tests_to_trigger.txt"
     runs-on: ubuntu-latest
     steps:
       - name: Check out the Repo
@@ -34,7 +36,6 @@ jobs:
           AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           QUAY_URL_API: "https://quay.io/api/v1/repository/openshift-release-dev/ocp-release/tag/"
           TRACKED_VERSIONS: '["4.12", "4.14", "4.15", "4.16", "4.17", "4.18", "4.19", "4.20"]'
-          TEST_TO_TRIGGER_FILE_PATH: "workflows/generatble-files/tests_to_trigger.txt"
           NEW_VERSION_FILE_PATH: "workflows/generatble-files/new_versions.json"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
@@ -43,11 +44,9 @@ jobs:
           commit-message: Update versions
           body: |
             :warning: Before approving the PR, run
-            
-            ```
-            $(cat test_triggers.txt)
-            ```
-            
+
+            $(cat ${TEST_TO_TRIGGER_FILE_PATH})
+  
             Updates version of the OCP version
           delete-branch: true
           assignees: empovit,TomerNewman
