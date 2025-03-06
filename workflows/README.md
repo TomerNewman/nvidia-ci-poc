@@ -22,8 +22,10 @@
 
 Public, doesn't require authentication, but requires pagination.
 
+Also see https://docs.redhat.com/en/documentation/red_hat_quay/latest/html-single/red_hat_quay_api_guide/index
+
 ```console
-curl -SsL -X GET "https://quay.io/v2/openshift-release-dev/ocp-release/tags/list?n=100&last=4.18.0-x86_64" -H "Content-Type: application/json"
+curl -SsL "https://quay.io/api/v1/repository/openshift-release-dev/ocp-release/tag/?limit=100&page=1&onlyActiveTags=true&filter_tag_name=like:4.1%.%-multi-x86_64" -H "Content-Type: application/json" | jq
 ```
 
 ### NVIDIA GPU operator (releases)
