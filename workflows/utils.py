@@ -40,3 +40,13 @@ def update_keys(versions_file, group_key, values):
         json_f.seek(0)  # rewind
         json.dump(data, json_f, indent=4)
         json_f.truncate()
+
+def get_logger():
+    logger = logging.getLogger('update_version')
+    logger.setLevel(logging.DEBUG)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s')
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+    return logger
