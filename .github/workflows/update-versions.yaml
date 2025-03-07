@@ -31,7 +31,7 @@ jobs:
         env:
           GH_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OCP_TAGS_URL: "https://quay.io/api/v1/repository/openshift-release-dev/ocp-release/tag/"
-          OCP_IGNORED_VERSIONS: '["4.13"]'
+          OCP_IGNORED_VERSIONS: '["4.11","4.13"]'
           TEST_TO_TRIGGER_FILE_PATH: "workflows/generatble-files/tests_to_trigger.txt"
           NEW_VERSION_FILE_PATH: "workflows/generatble-files/file.json"
       - name: Create Pull Request
