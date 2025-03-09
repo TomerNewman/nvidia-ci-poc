@@ -1,46 +1,44 @@
 #!/usr/bin/env python
 
-import sys
-import semver
 import requests
+import semver
+import sys
 from utils import update_key, get_logger
 from settings import settings
 
 logger = get_logger()
 
-def fetch_ocp_versions(version: str):
-    versions = []
-    params = {"filter_tag_name": f"like:{version}.%"}
+def fetch_ocp_versions():
+    versions = {}
+    page_size :int = 100
+    has_more :bool = True
+    tag_filter :str = "like:%.%.%-multi-x86_64"
+    page :int = 1
 
-    try:
-        response = requests.get(settings.quay_url_api, params=params)
+    while has_more:
+        response = requests.get(settings.quay_url_api, params={
+            "limit": str(page_size), "page": page, "filter_tag_name": tag_filter, "onlyActiveTags": "true"})
         response.raise_for_status()
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Failed to fetch data for {version}: {e}")
-        return []
+        response_json = response.json()
+        has_more = response_json.get("has_additional")
+        page = page + 1
 
-    for tag in response.json().get("tags", []):
-        tag_name = tag.get("name", "")
-        match = settings.tag_regex.match(tag_name)
-        if match:
-            versions.append(match.group("version"))
+        for tag in response_json.get("tags", []):
+            tag_name = tag.get("name", "")
+            match = settings.tag_regex.match(tag_name)
+            if not match:
+                continue
 
-    if not versions:
-        logger.warning(f"no versions found for {version}")
+            minor = match.group("minor")
+            if minor in settings.ignored_versions:
+                continue
+
+            full = f"{minor}.{match.group("patch")}"
+            patches = versions.get(minor)
+            versions[minor] = semver.max_ver(versions[minor], full) if patches else full
 
     return versions
 
-def get_latest_ocp_patch_versions():
-    latest_versions = {}
-
-    for version in settings.tracked_versions:
-        versions = fetch_ocp_versions(version)
-        if versions:
-            latest_version = max(versions, key=semver.VersionInfo.parse)
-            latest_versions[version] = latest_version
-
-    return latest_versions
-
 if __name__ == '__main__':
-    versions = get_latest_ocp_patch_versions()
+    versions = fetch_ocp_versions()
     update_key(sys.argv[1], "ocp", versions)
