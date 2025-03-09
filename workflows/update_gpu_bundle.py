@@ -24,4 +24,4 @@ def get_sha():
 
 if __name__ == '__main__':
     sha = get_sha()
-    utils.update_key(sys.argv[1], 'gpu-main-latest', sha, None)
+    utils.update_key(sys.argv[1], 'gpu-main-latest', sha)
