@@ -22,6 +22,7 @@ jobs:
         with:
           python-version: 3.13
       - name: Update OCP Version
+        id: read_tests
         run: |
           pip install -r workflows/requirements.txt
           export GH_AUTH_TOKEN=$(echo ${{ secrets.GITHUB_TOKEN }} | base64)
@@ -29,8 +30,13 @@ jobs:
           echo '{}' > ${NEW_VERSION_FILE_PATH}
           python workflows/update_gpu_bundle.py workflows/versions.json
           python workflows/update_ocp_version.py workflows/versions.json
-          python workflows/update_gpu_bundle.py workflows/versions.json
+          python workflows/update_gpu_operator.py workflows/versions.json
           python workflows/trigger_tests.py
+          {
+           echo 'TEST_TRIGGERS<<EOF'
+           cat ${TEST_TO_TRIGGER_FILE_PATH}
+           echo 'EOF'
+          } >> $GITHUB_OUTPUT
         env:
           GH_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OCP_TAGS_URL: "https://quay.io/api/v1/repository/openshift-release-dev/ocp-release/tag/"
@@ -43,8 +49,10 @@ jobs:
           title: "[Automatic] Update versions"
           commit-message: Update versions
           body: |
-            :warning: Before approving the PR, run `/test 4.18-stable-ocp-version-e2e-master`
-
+            :warning: Before approving the PR, run:
+            ```
+            ${{ steps.read_tests.outputs.TEST_TRIGGERS }}
+            ```
             Updates version of the OCP version
           delete-branch: true
           assignees: empovit,TomerNewman
