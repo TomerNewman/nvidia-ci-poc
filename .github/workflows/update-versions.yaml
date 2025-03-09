@@ -26,8 +26,8 @@ jobs:
         run: |
           pip install -r workflows/requirements.txt
           export GH_AUTH_TOKEN=$(echo ${{ secrets.GITHUB_TOKEN }} | base64)
-          mkdir -p $(dirname ${NEW_VERSION_FILE_PATH})
-          echo '{}' > ${NEW_VERSION_FILE_PATH}
+          mkdir -p $(dirname ${DIFF_VERSION_FILE_PATH})
+          echo '{}' > ${DIFF_VERSION_FILE_PATH}
           python workflows/update_ocp_version.py workflows/versions.json
           python workflows/update_gpu_operator.py workflows/versions.json
           python workflows/update_gpu_bundle.py workflows/versions.json
@@ -42,7 +42,8 @@ jobs:
           GH_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OCP_TAGS_URL: "https://quay.io/api/v1/repository/openshift-release-dev/ocp-release/tag/"
           OCP_IGNORED_VERSIONS: '["4.11","4.13"]'
-          NEW_VERSION_FILE_PATH: "workflows/generatble-files/new_versions.json"
+          FULL_VERSION_FILE_PATH: "workflows/versions.json"
+          DIFF_VERSION_FILE_PATH: "workflows/generatble-files/diff_versions.json"
           TEST_TO_TRIGGER_FILE_PATH: "workflows/generatble-files/tests_to_trigger.txt"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
@@ -50,7 +51,7 @@ jobs:
           title: "[Automatic] Update versions"
           commit-message: Update versions
           body: |
-            :warning: Before approving the PR, run
+            :warning: Before approving the PR, run the following tests:
 
              ```
             ${{ steps.read_tests.outputs.TEST_TRIGGERS }}

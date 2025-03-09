@@ -1,32 +1,46 @@
 import json
-from settings import settings
+from pickle import format_version
 
-def generate_test_triggers(file_path=settings.new_version_file_path, output_file=settings.tests_to_trigger_file_path):
-    # Read the JSON file
-    with open(file_path, "r") as f:
+from settings import settings
+from utils import get_latest_versions_to_test
+
+
+def generate_test_triggers():
+    with open(settings.full_versions_file_path, "r") as f:
+        all_data = json.load(f)
+
+    latest_gpu_versions, latest_ocp_versions = get_latest_versions_to_test(all_data)
+
+    with open(settings.diff_version_file_path, "r") as f:
         data = json.load(f)
 
     gpu_operator_versions = data.get("gpu-operator", {})
     ocp_versions = data.get("ocp", {})
+    bundle_image = data.get("gpu-main-latest", "")
 
     test_commands = set()
 
-    # Generate test triggers for GPU operator versions
+    if bundle_image != "":
+        for version in latest_ocp_versions:
+            test_commands.add(f"/test {version}-stable-nvidia-gpu-operator-e2e-master")
+
     for version in gpu_operator_versions:
+        if version not in latest_gpu_versions: # commenting only changed latest gpu versions
+            continue
         formatted_version = version.replace(".", "-")
-        for ocp_version in ["4.12", "4.14", "4.15", "4.16", "4.17", "4.18"]:
+        for ocp_version in latest_ocp_versions:
             test_commands.add(f"/test {ocp_version}-stable-nvidia-gpu-operator-e2e-{formatted_version}-x")
 
-    # Generate test triggers for OCP versions
     for ocp_version in ocp_versions:
-        for gpu_version in ["24.6", "24.9", "master"]:
+        for gpu_version in latest_gpu_versions:
             formatted_version = gpu_version if gpu_version == "master" else gpu_version.replace(".", "-") + "-x"
             test_commands.add(f"/test {ocp_version}-stable-nvidia-gpu-operator-e2e-{formatted_version}")
 
-    # Write unique test commands to output file
-    with open(output_file, "w") as f:
+    with open(settings.tests_to_trigger_file_path, "w") as f:
         for command in sorted(test_commands):
             f.write(command + "\n")
+
+
 
 if __name__ == "__main__":
     generate_test_triggers()

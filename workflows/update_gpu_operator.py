@@ -6,13 +6,14 @@ import utils
 import sys
 
 def get_operator_versions():
-    utils.logger.info('Calling NVCR authentication API')
+    logger = utils.get_logger()
+    logger.info('Calling NVCR authentication API')
     auth_req = requests.get('https://nvcr.io/proxy_auth?scope=repository:nvidia/gpu-operator:pull', allow_redirects=True,
                                 headers={'Content-Type': 'application/json'})
     auth_req.raise_for_status()
     token = auth_req.json()['token']
 
-    utils.logger.info('Listing tags of the operator image')
+    logger.info('Listing tags of the operator image')
     req = requests.get('https://nvcr.io/v2/nvidia/gpu-operator/tags/list', headers={
         'Content-Type': 'application/json', 'Authorization': f'Bearer {token}'})
     req.raise_for_status()
