@@ -26,12 +26,8 @@ jobs:
         run: |
           pip install -r workflows/requirements.txt
           export GH_AUTH_TOKEN=$(echo ${{ secrets.GITHUB_TOKEN }} | base64)
-          mkdir -p $(dirname ${DIFF_VERSION_FILE_PATH})
-          echo '{}' > ${DIFF_VERSION_FILE_PATH}
-          python workflows/update_ocp_version.py workflows/versions.json
-          python workflows/update_gpu_operator.py workflows/versions.json
-          python workflows/update_gpu_bundle.py workflows/versions.json
-          python workflows/trigger_tests.py
+          mkdir -p $(dirname ${TEST_TO_TRIGGER_FILE_PATH})
+          python workflows/update_versions.py
           {
            echo 'TEST_TRIGGERS<<EOF'
            cat ${TEST_TO_TRIGGER_FILE_PATH}
@@ -42,8 +38,7 @@ jobs:
           GH_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OCP_TAGS_URL: "https://quay.io/api/v1/repository/openshift-release-dev/ocp-release/tag/"
           OCP_IGNORED_VERSIONS: '["4.11","4.13"]'
-          FULL_VERSION_FILE_PATH: "workflows/versions.json"
-          DIFF_VERSION_FILE_PATH: "workflows/generatble-files/diff_versions.json"
+          VERSION_FILE_PATH: "workflows/versions.json"
           TEST_TO_TRIGGER_FILE_PATH: "workflows/generatble-files/tests_to_trigger.txt"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7

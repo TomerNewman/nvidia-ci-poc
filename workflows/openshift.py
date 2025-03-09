@@ -2,13 +2,11 @@
 
 import requests
 import semver
-import sys
-from utils import update_key, get_logger
+
 from settings import settings
 
-logger = get_logger()
 
-def fetch_ocp_versions():
+def fetch_ocp_versions() -> dict:
     versions = {}
     page_size :int = 100
     has_more :bool = True
@@ -39,6 +37,6 @@ def fetch_ocp_versions():
 
     return versions
 
-if __name__ == '__main__':
-    versions = fetch_ocp_versions()
-    update_key(sys.argv[1], "ocp", versions)
+
+def latest_ocp_releases(ocp_versions: dict) -> list:
+    return list(ocp_versions.keys())
