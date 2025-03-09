@@ -4,14 +4,15 @@ import sys
 import requests
 from utils import update_key, get_logger
 from settings import settings
+import semver
 
 logger = get_logger()
 
 def fetch_ocp_versions():
-    versions = []
+    versions = {}
     page_size :int = 100
     has_more :bool = True
-    tag_filter :str = "like:4.1%.%-multi-x86_64"
+    tag_filter :str = "like:%.%.%-multi-x86_64"
     page :int = 1
 
     while has_more:
@@ -25,21 +26,20 @@ def fetch_ocp_versions():
         for tag in response_json.get("tags", []):
             tag_name = tag.get("name", "")
             match = settings.tag_regex.match(tag_name)
-            if match:
-                versions.append(match.group("version"))
+            if not match:
+                continue
+
+            minor = match.group("minor")
+            if minor in settings.ignored_versions:
+                continue
+
+            full = f"{minor}.{match.group("patch")}"
+            patches = versions.get(minor)
+            versions[minor] = semver.max_ver(versions[minor], full) if patches else full
 
     return versions
 
-def get_latest_ocp_patch_versions():
-    latest_versions = {}
-    versions = fetch_ocp_versions()
-    # if versions:
-    #     latest_version = max(versions, key=semver.VersionInfo.parse)
-    #     latest_versions[version] = latest_version
-
-    return latest_versions
-
 if __name__ == '__main__':
-    versions = get_latest_ocp_patch_versions()
+    versions = fetch_ocp_versions()
     update_key(sys.argv[1], "ocp", versions)
 
